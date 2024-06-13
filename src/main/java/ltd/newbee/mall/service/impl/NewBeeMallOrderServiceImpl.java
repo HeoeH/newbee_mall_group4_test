@@ -65,6 +65,7 @@ public class NewBeeMallOrderServiceImpl implements NewBeeMallOrderService {
     @Override
     @Transactional
     public String updateOrderInfo(NewBeeMallOrder newBeeMallOrder) {
+        System.out.println(newBeeMallOrder.getOrderId());
         NewBeeMallOrder temp = newBeeMallOrderMapper.selectByPrimaryKey(newBeeMallOrder.getOrderId());
         // 不为空且orderStatus>=0且状态为出库之前可以修改部分信息
         if (temp != null && temp.getOrderStatus() >= 0 && temp.getOrderStatus() < 3) {
@@ -87,20 +88,23 @@ public class NewBeeMallOrderServiceImpl implements NewBeeMallOrderService {
     @Override
     @Transactional
     public String checkDone(Long[] ids) {
+        // 打印数组内容
+        System.out.println("Received IDs: " + Arrays.toString(ids));
         // 查询所有的订单 判断状态 修改状态和更新时间
         List<NewBeeMallOrder> orders = newBeeMallOrderMapper.selectByPrimaryKeys(Arrays.asList(ids));
         StringBuilder errorOrderNos = new StringBuilder();
+        StringBuilder deleteOrderNos = new StringBuilder();
         if (!CollectionUtils.isEmpty(orders)) {
             for (NewBeeMallOrder newBeeMallOrder : orders) {
                 if (newBeeMallOrder.getIsDeleted() == 1) {
-                    errorOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
+                    deleteOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
                     continue;
                 }
                 if (newBeeMallOrder.getOrderStatus() != 1) {
                     errorOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
                 }
             }
-            if (StringUtils.isEmpty(errorOrderNos.toString())) {
+            if (StringUtils.isEmpty(errorOrderNos.toString())&&StringUtils.isEmpty(deleteOrderNos.toString())) {
                 // 订单状态正常 可以执行配货完成操作 修改订单状态和更新时间
                 if (newBeeMallOrderMapper.checkDone(Arrays.asList(ids)) > 0) {
                     return ServiceResultEnum.SUCCESS.getResult();
@@ -110,8 +114,10 @@ public class NewBeeMallOrderServiceImpl implements NewBeeMallOrderService {
             } else {
                 // 订单此时不可执行出库操作
                 if (errorOrderNos.length() > 0 && errorOrderNos.length() < 100) {
-                    return errorOrderNos + "订单的状态不是支付成功无法执行出库操作";
-                } else {
+                    return errorOrderNos + "订单的状态不是支付成功无法执行配货操作";
+                } else if(deleteOrderNos.length() > 0 && deleteOrderNos.length() < 100){
+                    return deleteOrderNos+"订单已删除";
+                }else{
                     return "你选择了太多状态不是支付成功的订单，无法执行配货完成操作";
                 }
             }
@@ -126,17 +132,18 @@ public class NewBeeMallOrderServiceImpl implements NewBeeMallOrderService {
         // 查询所有的订单 判断状态 修改状态和更新时间
         List<NewBeeMallOrder> orders = newBeeMallOrderMapper.selectByPrimaryKeys(Arrays.asList(ids));
         StringBuilder errorOrderNos = new StringBuilder();
+        StringBuilder deleteOrderNos = new StringBuilder();
         if (!CollectionUtils.isEmpty(orders)) {
             for (NewBeeMallOrder newBeeMallOrder : orders) {
                 if (newBeeMallOrder.getIsDeleted() == 1) {
-                    errorOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
+                    deleteOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
                     continue;
                 }
                 if (newBeeMallOrder.getOrderStatus() != 1 && newBeeMallOrder.getOrderStatus() != 2) {
                     errorOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
                 }
             }
-            if (StringUtils.isEmpty(errorOrderNos.toString())) {
+            if (StringUtils.isEmpty(errorOrderNos.toString())&&StringUtils.isEmpty(deleteOrderNos.toString())) {
                 // 订单状态正常 可以执行出库操作 修改订单状态和更新时间
                 if (newBeeMallOrderMapper.checkOut(Arrays.asList(ids)) > 0) {
                     return ServiceResultEnum.SUCCESS.getResult();
@@ -147,8 +154,10 @@ public class NewBeeMallOrderServiceImpl implements NewBeeMallOrderService {
                 // 订单此时不可执行出库操作
                 if (errorOrderNos.length() > 0 && errorOrderNos.length() < 100) {
                     return errorOrderNos + "订单的状态不是支付成功或配货完成无法执行出库操作";
-                } else {
-                    return "你选择了太多状态不是支付成功或配货完成的订单，无法执行出库操作";
+                } else if(deleteOrderNos.length() > 0 && deleteOrderNos.length() < 100) {
+                    return deleteOrderNos+"订单已删除";
+                }else {
+                    return  "你选择了太多状态不是支付成功或配货完成的订单，无法执行出库操作";
                 }
             }
         }
@@ -162,11 +171,12 @@ public class NewBeeMallOrderServiceImpl implements NewBeeMallOrderService {
         // 查询所有的订单 判断状态 修改状态和更新时间
         List<NewBeeMallOrder> orders = newBeeMallOrderMapper.selectByPrimaryKeys(Arrays.asList(ids));
         StringBuilder errorOrderNos = new StringBuilder();
+        StringBuilder deleteOrderNos = new StringBuilder();
         if (!CollectionUtils.isEmpty(orders)) {
             for (NewBeeMallOrder newBeeMallOrder : orders) {
                 // isDeleted=1 一定为已关闭订单
                 if (newBeeMallOrder.getIsDeleted() == 1) {
-                    errorOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
+                    deleteOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
                     continue;
                 }
                 // 已关闭或者已完成无法关闭订单
@@ -174,7 +184,7 @@ public class NewBeeMallOrderServiceImpl implements NewBeeMallOrderService {
                     errorOrderNos.append(newBeeMallOrder.getOrderNo()).append(" ");
                 }
             }
-            if (StringUtils.isEmpty(errorOrderNos.toString())) {
+            if (StringUtils.isEmpty(errorOrderNos.toString())&&StringUtils.isEmpty(deleteOrderNos.toString())) {
                 // 订单状态正常 可以执行关闭操作 修改订单状态和更新时间
                 if (newBeeMallOrderMapper.closeOrder(Arrays.asList(ids), NewBeeMallOrderStatusEnum.ORDER_CLOSED_BY_JUDGE.getOrderStatus()) > 0) {
                     return ServiceResultEnum.SUCCESS.getResult();
@@ -185,7 +195,9 @@ public class NewBeeMallOrderServiceImpl implements NewBeeMallOrderService {
                 // 订单此时不可执行关闭操作
                 if (errorOrderNos.length() > 0 && errorOrderNos.length() < 100) {
                     return errorOrderNos + "订单不能执行关闭操作";
-                } else {
+                } else  if (deleteOrderNos.length() > 0 && deleteOrderNos.length() < 100) {
+                    return deleteOrderNos + "订单已删除";
+                } else{
                     return "你选择的订单不能执行关闭操作";
                 }
             }

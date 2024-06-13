@@ -190,28 +190,4 @@ public class NewBeeMallCoupon {
         this.isDeleted = isDeleted;
         return this;
     }
-
-    public NewBeeMallCoupon(Long couponId, String couponName, String couponDesc, Integer couponTotal, Integer discount, Integer min, Byte couponLimit, Byte couponType, Byte couponStatus, Byte goodsType, String goodsValue, String couponCode, LocalDate couponStartTime, LocalDate couponEndTime, Date createTime, Date updateTime, Byte isDeleted) {
-        this.couponId = couponId;
-        this.couponName = couponName;
-        this.couponDesc = couponDesc;
-        this.couponTotal = couponTotal;
-        this.discount = discount;
-        this.min = min;
-        this.couponLimit = couponLimit;
-        this.couponType = couponType;
-        this.couponStatus = couponStatus;
-        this.goodsType = goodsType;
-        this.goodsValue = goodsValue;
-        this.couponCode = couponCode;
-        this.couponStartTime = couponStartTime;
-        this.couponEndTime = couponEndTime;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
-        this.isDeleted = isDeleted;
-    }
-
-    public NewBeeMallCoupon() {
-    }
-
 }

@@ -27,7 +27,6 @@ public class IndexConfig {
 
     private Byte isDeleted;
 
-
     public IndexConfig() {
     }
 

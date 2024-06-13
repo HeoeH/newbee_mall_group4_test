@@ -47,36 +47,6 @@ public class NewBeeMallGoods {
 
     private String goodsDetailContent;
 
-
-//    public NewBeeMallGoods(Object o, String 商品A, String 简介A, long l, String 封面A, String 轮播A, int i, int i1, int i2, String 标签A, byte b, int i3, Date date, int i4, Date date1, String 详情A) {
-//
-//    }
-
-    public NewBeeMallGoods(Long goodsId, String goodsName, String goodsIntro, Long goodsCategoryId, String goodsCoverImg, String goodsCarousel, Integer originalPrice, Integer sellingPrice, Integer stockNum, String tag, Byte goodsSellStatus, Integer createUser, Date createTime, Integer updateUser, Date updateTime, String goodsDetailContent) {
-        this.goodsId = goodsId;
-        this.goodsName = goodsName;
-        this.goodsIntro = goodsIntro;
-        this.goodsCategoryId = goodsCategoryId;
-        this.goodsCoverImg = goodsCoverImg;
-        this.goodsCarousel = goodsCarousel;
-        this.originalPrice = originalPrice;
-        this.sellingPrice = sellingPrice;
-        this.stockNum = stockNum;
-        this.tag = tag;
-        this.goodsSellStatus = goodsSellStatus;
-        this.createUser = createUser;
-        this.createTime = createTime;
-        this.updateUser = updateUser;
-        this.updateTime = updateTime;
-        this.goodsDetailContent = goodsDetailContent;
-    }
-
-    public NewBeeMallGoods() {
-
-    }
-
-
-
     public Long getGoodsId() {
         return goodsId;
     }

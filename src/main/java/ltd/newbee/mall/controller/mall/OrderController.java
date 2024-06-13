@@ -57,7 +57,6 @@ public class OrderController {
     @Autowired
     private AlipayConfig alipayConfig;
 
-
     /**
      * 重构该类,将AlipayClient,AliPayTradePagePayRequest提取为类级别的依赖
      */
@@ -90,7 +89,6 @@ public class OrderController {
     public void setNewBeeMallShoppingCartService(NewBeeMallShoppingCartService newBeeMallShoppingCartService) {
         this.newBeeMallShoppingCartService = newBeeMallShoppingCartService;
     }
-
 
 
     @GetMapping("/orders/{orderNo}")
@@ -183,13 +181,6 @@ public class OrderController {
         if (payType == 1) {
             request.setCharacterEncoding(Constants.UTF_ENCODING);
             // 初始化
-
-            AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getGateway(), alipayConfig.getAppId(),
-                    alipayConfig.getRsaPrivateKey(), alipayConfig.getFormat(), alipayConfig.getCharset(), alipayConfig.getAlipayPublicKey(),
-                    alipayConfig.getSigntype());
-            // 创建API对应的request
-            AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-
             alipayClient = new DefaultAlipayClient(alipayConfig.getGateway(), alipayConfig.getAppId(),
                     alipayConfig.getRsaPrivateKey(), alipayConfig.getFormat(), alipayConfig.getCharset(), alipayConfig.getAlipayPublicKey(),
                     alipayConfig.getSigntype());
@@ -198,7 +189,6 @@ public class OrderController {
              * 已重构不需要
              **/
 //            AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-
             // 在公共参数中设置回跳和通知地址,通知地址需要公网可访问
             String url = ProjectConfig.getServerUrl() + request.getContextPath();
             alipayRequest.setReturnUrl(url + "/returnOrders/" + newBeeMallOrder.getOrderNo() + "/" + userId);
@@ -227,9 +217,6 @@ public class OrderController {
             String form;
             try {
                 // 需要自行申请支付宝的沙箱账号、申请appID，并在配置文件中依次配置AppID、密钥、公钥，否则这里会报错。
-
-                form = alipayClient.pageExecute(alipayRequest).getBody();//调用SDK生成表单
-
                 /**
                  * 此处修改逻辑，用于避免报错
                  */
@@ -239,7 +226,6 @@ public class OrderController {
                     form = "any";
                 }
 //                form = alipayClient.pageExecute(alipayRequest).getBody();//调用SDK生成表单
-
                 request.setAttribute("form", form);
             } catch (AlipayApiException e) {
                 e.printStackTrace();

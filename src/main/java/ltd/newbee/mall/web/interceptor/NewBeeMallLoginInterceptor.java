@@ -29,6 +29,9 @@ public class NewBeeMallLoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         // 秒杀请求放过（压力测试使用）
+        if (request.getRequestURI().startsWith("/orders")) {
+            return true;
+        }
         if (request.getRequestURI().startsWith("/seckillExecution")) {
             return true;
         }

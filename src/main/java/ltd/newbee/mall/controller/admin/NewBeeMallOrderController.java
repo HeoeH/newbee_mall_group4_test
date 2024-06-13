@@ -64,18 +64,37 @@ public class NewBeeMallOrderController {
     @RequestMapping(value = "/orders/update", method = RequestMethod.POST)
     @ResponseBody
     public Result update(@RequestBody NewBeeMallOrder newBeeMallOrder) {
-        if (Objects.isNull(newBeeMallOrder.getTotalPrice())
-                || Objects.isNull(newBeeMallOrder.getOrderId())
-                || newBeeMallOrder.getOrderId() < 1
-                || newBeeMallOrder.getTotalPrice() < 1
-                || StringUtils.isEmpty(newBeeMallOrder.getUserAddress())) {
+        Long orderId = newBeeMallOrder.getOrderId();
+        Integer totalPrice = newBeeMallOrder.getTotalPrice();
+        String userAddress = newBeeMallOrder.getUserAddress();
+
+        if (orderId == null || totalPrice == null ||
+                orderId < 1 || totalPrice < 1 ||
+                StringUtils.isEmpty(userAddress) ||
+                isNumeric(userAddress) ||
+                !isNumeric(totalPrice.toString())) {
             return ResultGenerator.genFailResult("参数异常！");
         }
+
         String result = newBeeMallOrderService.updateOrderInfo(newBeeMallOrder);
         if (ServiceResultEnum.SUCCESS.getResult().equals(result)) {
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult(result);
+        }
+    }
+
+
+    // 检查字符串是否为数字
+    private boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
@@ -98,6 +117,9 @@ public class NewBeeMallOrderController {
     @RequestMapping(value = "/orders/checkDone", method = RequestMethod.POST)
     @ResponseBody
     public Result checkDone(@RequestBody Long[] ids) {
+        if(ids==null){
+            return  ResultGenerator.genFailResult("请选择商品！");
+        }
         if (ids.length < 1) {
             return ResultGenerator.genFailResult("参数异常！");
         }
@@ -115,6 +137,9 @@ public class NewBeeMallOrderController {
     @RequestMapping(value = "/orders/checkOut", method = RequestMethod.POST)
     @ResponseBody
     public Result checkOut(@RequestBody Long[] ids) {
+        if(ids==null){
+            return  ResultGenerator.genFailResult("请选择商品！");
+        }
         if (ids.length < 1) {
             return ResultGenerator.genFailResult("参数异常！");
         }
@@ -132,6 +157,9 @@ public class NewBeeMallOrderController {
     @RequestMapping(value = "/orders/close", method = RequestMethod.POST)
     @ResponseBody
     public Result closeOrder(@RequestBody Long[] ids) {
+        if(ids==null){
+            return  ResultGenerator.genFailResult("请选择商品！");
+        }
         if (ids.length < 1) {
             return ResultGenerator.genFailResult("参数异常！");
         }
