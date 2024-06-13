@@ -34,8 +34,8 @@ import java.util.Objects;
 public class NewBeeMallCarouselController {
 
     @Resource
-    public
-    NewBeeMallCarouselService newBeeMallCarouselService;
+
+    public NewBeeMallCarouselService newBeeMallCarouselService;
 
     @GetMapping("/carousels")
     public String carouselPage(HttpServletRequest request) {
@@ -49,9 +49,16 @@ public class NewBeeMallCarouselController {
     @RequestMapping(value = "/carousels/list", method = RequestMethod.GET)
     @ResponseBody
     public Result list(@RequestParam Map<String, Object> params) {
-        if (StringUtils.isEmpty((CharSequence) params.get("page")) || StringUtils.isEmpty((CharSequence) params.get("limit"))) {
+        // 变量缓存
+        CharSequence page = (CharSequence) params.get("page");
+        CharSequence limit = (CharSequence) params.get("limit");
+
+        // 简化条件判断
+        if (StringUtils.isEmpty(page) || StringUtils.isEmpty(limit)) {
             return ResultGenerator.genFailResult("参数异常！");
         }
+
+        // 避免多余的对象转换
         PageQueryUtil pageUtil = new PageQueryUtil(params);
         return ResultGenerator.genSuccessResult(newBeeMallCarouselService.getCarouselPage(pageUtil));
     }
@@ -62,10 +69,16 @@ public class NewBeeMallCarouselController {
     @RequestMapping(value = "/carousels/save", method = RequestMethod.POST)
     @ResponseBody
     public Result save(@RequestBody Carousel carousel) {
-        if (StringUtils.isEmpty(carousel.getCarouselUrl())
-                || Objects.isNull(carousel.getCarouselRank())) {
+        // 变量缓存
+        String carouselUrl = carousel.getCarouselUrl();
+        Integer carouselRank = carousel.getCarouselRank();
+
+        // 简化条件判断
+        if (StringUtils.isEmpty(carouselUrl) || Objects.isNull(carouselRank)) {
             return ResultGenerator.genFailResult("参数异常！");
         }
+
+        // 避免多余的对象转换
         String result = newBeeMallCarouselService.saveCarousel(carousel);
         if (ServiceResultEnum.SUCCESS.getResult().equals(result)) {
             return ResultGenerator.genSuccessResult();
@@ -73,6 +86,7 @@ public class NewBeeMallCarouselController {
             return ResultGenerator.genFailResult(result);
         }
     }
+
 
 
     /**

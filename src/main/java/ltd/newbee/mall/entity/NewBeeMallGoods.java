@@ -47,6 +47,7 @@ public class NewBeeMallGoods {
 
     private String goodsDetailContent;
 
+
 //    public NewBeeMallGoods(Object o, String 商品A, String 简介A, long l, String 封面A, String 轮播A, int i, int i1, int i2, String 标签A, byte b, int i3, Date date, int i4, Date date1, String 详情A) {
 //
 //    }
@@ -73,6 +74,7 @@ public class NewBeeMallGoods {
     public NewBeeMallGoods() {
 
     }
+
 
 
     public Long getGoodsId() {

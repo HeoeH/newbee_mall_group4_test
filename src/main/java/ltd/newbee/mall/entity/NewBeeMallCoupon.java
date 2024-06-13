@@ -38,8 +38,6 @@ public class NewBeeMallCoupon {
 
     private Byte isDeleted;
 
-
-
     public Long getCouponId() {
         return couponId;
     }
@@ -215,4 +213,5 @@ public class NewBeeMallCoupon {
 
     public NewBeeMallCoupon() {
     }
+
 }

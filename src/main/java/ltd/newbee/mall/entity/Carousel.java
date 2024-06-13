@@ -33,6 +33,7 @@ public class Carousel {
 
     private Integer updateUser;
 
+
     public Carousel() {
 
     }
@@ -128,6 +129,7 @@ public class Carousel {
         return sb.toString();
     }
 
+
     public Carousel(Integer carouselId, String carouselUrl, String redirectUrl, Integer carouselRank, Byte isDeleted, Date createTime, Integer createUser, Date updateTime, Integer updateUser) {
         this.carouselId = carouselId;
         this.carouselUrl = carouselUrl;
@@ -139,4 +141,5 @@ public class Carousel {
         this.updateTime = updateTime;
         this.updateUser = updateUser;
     }
+
 }

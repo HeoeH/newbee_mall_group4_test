@@ -36,7 +36,9 @@ import java.util.*;
 public class NewBeeMallGoodsCategoryController {
 
     @Resource
+
     public NewBeeMallCategoryService newBeeMallCategoryService;
+
 
     @GetMapping("/categories")
     public String categoriesPage(HttpServletRequest request, @RequestParam("categoryLevel") Byte categoryLevel, @RequestParam("parentId") Long parentId, @RequestParam("backParentId") Long backParentId) {
@@ -103,12 +105,16 @@ public class NewBeeMallGoodsCategoryController {
     @RequestMapping(value = "/categories/save", method = RequestMethod.POST)
     @ResponseBody
     public Result save(@RequestBody GoodsCategory goodsCategory) {
-        if (Objects.isNull(goodsCategory.getCategoryLevel())
-                || StringUtils.isEmpty(goodsCategory.getCategoryName())
-                || Objects.isNull(goodsCategory.getParentId())
-                || Objects.isNull(goodsCategory.getCategoryRank())) {
+        Integer categoryLevel = Integer.valueOf(goodsCategory.getCategoryLevel());
+        String categoryName = goodsCategory.getCategoryName();
+        Long parentId = goodsCategory.getParentId();
+        Integer categoryRank = goodsCategory.getCategoryRank();
+
+        if (categoryLevel == null || categoryName == null || categoryName.isEmpty()
+                || parentId == null || categoryRank == null) {
             return ResultGenerator.genFailResult("参数异常！");
         }
+
         String result = newBeeMallCategoryService.saveCategory(goodsCategory);
         if (ServiceResultEnum.SUCCESS.getResult().equals(result)) {
             return ResultGenerator.genSuccessResult();
@@ -116,6 +122,8 @@ public class NewBeeMallGoodsCategoryController {
             return ResultGenerator.genFailResult(result);
         }
     }
+
+
 
 
     /**
@@ -169,4 +177,6 @@ public class NewBeeMallGoodsCategoryController {
     }
 
 
+
 }
+

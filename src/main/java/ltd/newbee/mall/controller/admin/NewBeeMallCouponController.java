@@ -19,7 +19,11 @@ import java.util.Map;
 public class NewBeeMallCouponController {
 
     @Autowired
+
     public NewBeeMallCouponService newBeeMallCouponService;
+
+
+
 
     @GetMapping("/coupon")
     public String index(HttpServletRequest request) {
