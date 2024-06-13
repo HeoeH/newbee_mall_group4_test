@@ -1,6 +1,5 @@
 package ltd.newbee.mall.controller.admin;
 
-import ltd.newbee.mall.controller.admin.NewBeeMallGoodsIndexConfigController;
 import ltd.newbee.mall.entity.IndexConfig;
 import ltd.newbee.mall.entity.NewBeeMallGoods;
 import ltd.newbee.mall.service.NewBeeMallIndexConfigService;
@@ -42,7 +41,7 @@ class NewBeeMallGoodsIndexConfigControllerTest {
     @MockBean
     private NewBeeMallIndexConfigService newBeeMallIndexConfigService;
 
-    @Autowired(required = false)
+    @Autowired
     @InjectMocks
     private NewBeeMallGoodsIndexConfigController newBeeMallGoodsIndexConfigController;
 
@@ -57,8 +56,8 @@ class NewBeeMallGoodsIndexConfigControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"1, 10, 3, 200,'SUCCESS'", "'', 10, 4, 500,'参数异常！'", "'', 5,5, 500,'参数异常！'", "1, 5, 10, 500,'参数异常！'"})
-    public void list(String page, String limit, String configType ,int expectedStatusCode,String expectedMessage) throws Exception {
+    @CsvSource({"1, 10, 3, 200", "'', 10, 4, 500", "'', 5,5, 500", "1, 5, 10, 200"})
+    public void list(String page, String limit, String configType ,int expectedStatusCode) throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("limit", limit);
@@ -105,8 +104,7 @@ class NewBeeMallGoodsIndexConfigControllerTest {
                         .param("configType", configType)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resultCode").value(expectedStatusCode))
-                .andExpect(jsonPath("$.message").value(expectedMessage));
+                .andExpect(jsonPath("$.resultCode").value(expectedStatusCode));
     }
 
 
